@@ -3,9 +3,9 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "federal-court-due-date"
+name = "federal-court-deadlines"
 version = "0.0.1"
-description = "A project for calculating Federal Court due dates."
+description = "A project for calculating Federal Court deadlines."
 authors = [
     { name = "Arthur Ryman", email = "arthur.ryman@gmail.com" }
 ]
