@@ -2,16 +2,15 @@
 
 import calendar
 import datetime
-
-#TODO: Import holidays from https://pypi.org/project/holidays/
+from deadlines.canadian_holidays import calc_holidays
 
 def find_year(month:int, day:int, weekday:int, max_year: int) -> int:
     """
     Find the most recent year <= max_year in which the given (month, day, weekday)
     combination occurs.
 
-    Let's assume that we can always find a matching year.
-    Then we only have to check the most recent 28 years since the
+    We can safely assume that we can always find a matching year.
+    In fact,we only have to check the most recent 28 years since the
     pattern of weekdays repeats every 28 years. To see this recall
     that we have a leap year every 4 years, and every year must begin on
     one of 7 weekdays. The pattern of weekdays must therefore repeat
@@ -167,3 +166,80 @@ def is_business_day(date: datetime.date) -> bool:
 
     return weekday_number(date) < calendar.SATURDAY
 
+
+def is_holiday(date: datetime.date, is_quebec: bool = False) -> bool:
+    """
+    Check if a given date is a holiday.
+    This function is a placeholder and should be replaced with actual
+    holiday checking logic.
+
+    Args:
+        date: the given date
+        is_quebec: if True, check for Quebec holidays
+
+    Returns:
+        True if the date is a holiday, False otherwise
+    """
+
+    # get the holidays for the year
+    all_holidays: dict[str, datetime.date] = calc_holidays(date.year, is_quebec)
+
+    return date in all_holidays.values()
+
+
+def is_recess(date: datetime.date) -> bool:
+    """
+    Check if a given date is during a court recess.
+    This function is a placeholder and should be replaced with actual
+    recess checking logic.
+
+    Args:
+        date: the given date
+
+    Returns:
+        True if the date is during a recess, False otherwise
+    """
+
+    # the Federal Court is in summer recess during the months of July and August
+    if date.month in (calendar.JULY, calendar.AUGUST):
+        return True
+
+    # the Federal Court is in seasonal recess from December 21 to January 7
+
+    if date.month == calendar.DECEMBER and date.day >= 21:
+        return True
+
+    if date.month == calendar.JANUARY and date.day <= 7:
+        return True
+
+    # the court is not in recess
+    return False
+
+
+def is_court_open(date: datetime.date, is_quebec: bool = False) -> bool:
+    """
+    Check if the court is open on a given date.
+    The court is open if the date is a business day and not a holiday
+    and the court is not in recess.
+
+    Args:
+        date: the given date
+        is_quebec: if True, check for Quebec holidays
+
+    Returns:
+        True if the court is open, False otherwise
+    """
+
+    if is_weekend(date):
+        return False
+
+    assert is_business_day(date)
+
+    if is_holiday(date, is_quebec):
+        return False
+
+    if is_recess(date):
+        return False
+
+
+    return True
