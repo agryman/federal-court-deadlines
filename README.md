@@ -30,7 +30,40 @@ The goal of the first phase is to develop a reference implementation of the rule
 This will ensure that I have a correct understanding of the rules.
 I have chosen Python because it is a highly-productive development platform.
 However, it may not be the best platform for use in a legal office environment.
-I will investigate the suitability of services such as Google Colab for hosting Jupyter notebooks
+
+#### Google Colab
+
+I have investigated the suitability of Google Colab for hosting Jupyter notebooks.
+Colab looks very promising.
+However, I ran into a problem with the Python `calendar` module.
+My initial implementation made use of some features of `calendar`
+that were added in Python 3.12. 
+This is a problem because at present Colab is using Python 3.11.11.
+The fix this I need to:
+* downgrade my development environment to Python 3.11.11, and
+* implement the missing features of `calendar` in my code.
+
+I installed Python 3.11 using homebrew.
+```shell
+brew install python@3.11
+```
+
+The Python command is:
+```shell
+/opt/homebrew/bin/python3.11
+```
+
+##### Environment-Specific Code
+
+Add the following notebook code cell to install the project only in the
+Colab environment:
+
+```
+import sys
+IN_COLAB = "google.colab" in sys.modules
+if IN_COLAB:
+    !pip install git+https://github.com/agryman/federal-court-deadlines.git
+```
 
 ### Phase 2
 

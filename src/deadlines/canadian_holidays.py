@@ -32,6 +32,7 @@ import calendar
 import datetime
 from functools import cache
 from holidays import country_holidays, HolidayBase
+from deadlines.enums import Month, Weekday
 
 # days listed at https://www.canada.ca/en/revenue-agency/services/tax/public-holidays.html
 NEW_YEARS_DAY: str = "New Year's Day"
@@ -99,11 +100,11 @@ def calc_first_monday(year:int, month:int) -> datetime.date:
     first_weekday: int = first_day_date.weekday()
 
     # Calculate the day of the month of the first Monday
-    first_monday_day: int = 1 if first_weekday == calendar.MONDAY else 8 - first_weekday
+    first_monday_day: int = 1 if first_weekday == Weekday.MONDAY else 8 - first_weekday
     first_monday_date: datetime.date = datetime.date(year, month, first_monday_day)
 
     # assert that the first Monday is indeed a Monday
-    assert first_monday_date.weekday() == calendar.MONDAY
+    assert first_monday_date.weekday() == Weekday.MONDAY
 
     return first_monday_date
 
@@ -119,7 +120,7 @@ def calc_new_years_day(year:int) -> datetime.date:
         the date of New Year's Day for the given year
     """
     # New Year's Day is celebrated on January 1
-    return datetime.date(year, calendar.JANUARY, 1)
+    return datetime.date(year, Month.JANUARY, 1)
 
 
 def calc_good_friday(year:int) -> datetime.date:
@@ -140,7 +141,7 @@ def calc_good_friday(year:int) -> datetime.date:
     assert len(matches) == 1
 
     # assert that Good Friday is indeed a Friday
-    assert matches[0].weekday() == calendar.FRIDAY
+    assert matches[0].weekday() == Weekday.FRIDAY
 
     return matches[0]
 
@@ -187,17 +188,17 @@ def calc_victoria_day(year:int) -> datetime.date:
     """
 
     # Victoria Day is celebrated on the last Monday before May 25
-    may_25_date: datetime.date = datetime.date(year, calendar.MAY, 25)
+    may_25_date: datetime.date = datetime.date(year, Month.MAY, 25)
 
     # recall that weekdays are numbered from 0 (Monday) to 6 (Sunday)
     may_25_weekday: int = may_25_date.weekday()
 
     # Calculate the gap between Victoria Day and May 25
-    gap: int = may_25_weekday if may_25_weekday > calendar.MONDAY else 7
+    gap: int = may_25_weekday if may_25_weekday > Weekday.MONDAY else 7
     victoria_day_date: datetime.date = may_25_date - datetime.timedelta(days=gap)
 
     # assert that Victoria Day is a Monday
-    assert victoria_day_date.weekday() == calendar.MONDAY
+    assert victoria_day_date.weekday() == Weekday.MONDAY
 
     return victoria_day_date
 
@@ -214,7 +215,7 @@ def calc_saint_jean_baptiste_day(year:int) -> datetime.date:
     """
 
     # Saint-Jean-Baptiste Day is celebrated on June 24
-    return datetime.date(year, calendar.JUNE, 24)
+    return datetime.date(year, Month.JUNE, 24)
 
 
 def calc_canada_day(year:int) -> datetime.date:
@@ -229,11 +230,11 @@ def calc_canada_day(year:int) -> datetime.date:
     """
 
     # Canada Day is normally celebrated on July 1
-    july_1_date: datetime.date = datetime.date(year, calendar.JULY, 1)
+    july_1_date: datetime.date = datetime.date(year, Month.JULY, 1)
 
     # If July 1 is a Sunday, Canada Day is celebrated on July 2
-    if july_1_date.weekday() == calendar.SUNDAY:
-        return datetime.date(year, calendar.JULY, 2)
+    if july_1_date.weekday() == Weekday.SUNDAY:
+        return datetime.date(year, Month.JULY, 2)
 
     return july_1_date
 
@@ -250,7 +251,7 @@ def calc_civic_holiday(year:int) -> datetime.date:
     """
 
     # Civic Holiday is celebrated on the first Monday in August
-    return calc_first_monday(year, calendar.AUGUST)
+    return calc_first_monday(year, Month.AUGUST)
 
 
 def calc_labour_day(year:int) -> datetime.date:
@@ -265,7 +266,7 @@ def calc_labour_day(year:int) -> datetime.date:
     """
 
     # Labour Day is celebrated on the first Monday in September
-    return calc_first_monday(year, calendar.SEPTEMBER)
+    return calc_first_monday(year, Month.SEPTEMBER)
 
 
 def calc_national_day_for_truth_and_reconciliation(year:int) -> datetime.date:
@@ -280,7 +281,7 @@ def calc_national_day_for_truth_and_reconciliation(year:int) -> datetime.date:
     """
 
     # National Day for Truth and Reconciliation is celebrated on September 30
-    return datetime.date(year, calendar.SEPTEMBER, 30)
+    return datetime.date(year, Month.SEPTEMBER, 30)
 
 def calc_remembrance_day(year:int) -> datetime.date:
     """
@@ -294,7 +295,7 @@ def calc_remembrance_day(year:int) -> datetime.date:
     """
 
     # Remembrance Day is celebrated on November 11
-    return datetime.date(year, calendar.NOVEMBER, 11)
+    return datetime.date(year, Month.NOVEMBER, 11)
 
 def calc_thanksgiving_day(year:int) -> datetime.date:
     """
@@ -307,7 +308,7 @@ def calc_thanksgiving_day(year:int) -> datetime.date:
         the date of Thanksgiving Day for the given year
     """
 
-    first_monday_date: datetime.date = calc_first_monday(year, calendar.OCTOBER)
+    first_monday_date: datetime.date = calc_first_monday(year, Month.OCTOBER)
 
     # Thanksgiving Day is celebrated on the second Monday in October
     return first_monday_date + datetime.timedelta(days=7)
@@ -325,7 +326,7 @@ def calc_christmas_day(year:int) -> datetime.date:
     """
 
     # Christmas Day is celebrated on December 25
-    return datetime.date(year, calendar.DECEMBER, 25)
+    return datetime.date(year, Month.DECEMBER, 25)
 
 
 def calc_boxing_day(year:int) -> datetime.date:
@@ -340,7 +341,7 @@ def calc_boxing_day(year:int) -> datetime.date:
     """
 
     # Boxing Day is celebrated on December 26
-    return datetime.date(year, calendar.DECEMBER, 26)
+    return datetime.date(year, Month.DECEMBER, 26)
 
 
 @cache

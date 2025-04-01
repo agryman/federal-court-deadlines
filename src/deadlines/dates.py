@@ -3,6 +3,8 @@
 import calendar
 import datetime
 from deadlines.canadian_holidays import calc_holidays
+from deadlines.enums import Month, Weekday
+
 
 def find_year(month:int, day:int, weekday:int, max_year: int) -> int:
     """
@@ -150,7 +152,7 @@ def is_weekend(date: datetime.date) -> bool:
         True if the date is a weekend, False otherwise
     """
 
-    return weekday_number(date) >= calendar.SATURDAY
+    return weekday_number(date) >= Weekday.SATURDAY
 
 
 def is_business_day(date: datetime.date) -> bool:
@@ -164,7 +166,7 @@ def is_business_day(date: datetime.date) -> bool:
         True if the date is a business day, False otherwise
     """
 
-    return weekday_number(date) < calendar.SATURDAY
+    return weekday_number(date) < Weekday.SATURDAY
 
 
 def is_holiday(date: datetime.date, is_quebec: bool = False) -> bool:
@@ -201,15 +203,15 @@ def is_recess(date: datetime.date) -> bool:
     """
 
     # the Federal Court is in summer recess during the months of July and August
-    if date.month in (calendar.JULY, calendar.AUGUST):
+    if date.month in (Month.JULY, Month.AUGUST):
         return True
 
     # the Federal Court is in seasonal recess from December 21 to January 7
 
-    if date.month == calendar.DECEMBER and date.day >= 21:
+    if date.month == Month.DECEMBER and date.day >= 21:
         return True
 
-    if date.month == calendar.JANUARY and date.day <= 7:
+    if date.month == Month.JANUARY and date.day <= 7:
         return True
 
     # the court is not in recess
