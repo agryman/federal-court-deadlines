@@ -4,13 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "federal-court-deadlines"
-version = "0.0.1"
+version = "0.0.2"
 description = "A project for calculating Federal Court deadlines."
 authors = [
     { name = "Arthur Ryman", email = "arthur.ryman@gmail.com" }
 ]
 readme = "README.md"
 requires-python = ">=3.13"
+dependencies = [
+    "holidays>=0.69"
+]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
