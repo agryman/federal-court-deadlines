@@ -1,29 +1,39 @@
 import pytest
 import datetime
-from deadlines.due_dates import deadline
-from deadlines.examples import *
+from deadlines.dates import format_date, parse_date
+from deadlines.due_dates import deadline, dl
+from deadlines.examples import guideline_examples
 
-@pytest.mark.parametrize(
-    "example",
-    [
-        general_example_1,
-        general_example_2,
-        general_example_3,
-        holidays_weekends_example_1,
-        holidays_weekends_example_2,
-        summer_recess_example_1,
-        seasonal_recess_example_1,
-        seasonal_recess_example_2,
-        seasonal_recess_example_3,
-    ]
-)
+
+@pytest.mark.parametrize("example", guideline_examples)
 def test_deadline_guideline_example(example):
     """
     Test the deadline function with a Guideline example.
     """
-    event_date: datetime = example.event_date
+    event_date: datetime.date = example.event_date
     number_of_days: int = example.number_of_days
     after_event: bool = example.after_event
-    deadline_date: datetime = example.deadline_date
+    expected_deadline_date: datetime.date = example.deadline_date
 
-    assert deadline(event_date, number_of_days, after_event) == deadline_date
+    deadline_date: datetime.date = deadline(event_date, number_of_days, after_event)
+
+    assert  deadline_date == expected_deadline_date
+
+
+@pytest.mark.parametrize("example", guideline_examples)
+def test_dl_guideline_example(example):
+    """
+    Test the dl function with a Guideline example.
+    """
+    event_date: datetime.date = example.event_date
+    number_of_days: int = example.number_of_days
+    after_event: bool = example.after_event
+    expected_deadline_date: datetime.date = example.deadline_date
+
+    event_date_str: str = format_date(event_date)
+    signed_number_of_days: int = number_of_days if after_event else -number_of_days
+
+    deadline_date_str: str = dl(event_date_str, signed_number_of_days)
+    deadline_date: datetime.date = parse_date(deadline_date_str)
+
+    assert deadline_date == expected_deadline_date

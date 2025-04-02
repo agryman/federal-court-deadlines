@@ -1,7 +1,7 @@
 """This module computes due dates for Federal Court cases."""
 
 import datetime
-from deadlines.dates import add_days, is_court_open, is_recess
+from deadlines.dates import add_days, is_court_open, is_recess, parse_date, format_date
 
 
 def deadline(event_date: datetime.date,
@@ -60,3 +60,28 @@ def deadline_after(event_date: datetime.date, number_of_days: int, is_quebec: bo
 
 def deadline_before(event_date: datetime.date, number_of_days: int, is_quebec: bool = False) -> datetime.date:
     return deadline(event_date, number_of_days, after_event=False, is_quebec=is_quebec)
+
+def dl(event_date_str: str, signed_number_of_days: int, is_quebec: bool = False) -> str:
+    """
+    Compute the deadline for a given event date and number of days.
+
+    Args:
+        event_date_str: The date of the event in YYYY-MM-DD format.
+        signed_number_of_days: The number of days between the event date and deadline.
+        is_quebec: If True, the deadline is calculated according to Quebec rules.
+
+    Returns:
+        The computed deadline date in YYYY-MM-DD format.
+    """
+    event_date: datetime.date = parse_date(event_date_str)
+    deadline_date: datetime.date
+
+    # if the number of days is positive, the deadline is after the event date, else it is before
+    if signed_number_of_days > 0:
+        deadline_date = deadline_after(event_date, signed_number_of_days, is_quebec)
+    else:
+        deadline_date = deadline_before(event_date, -signed_number_of_days, is_quebec)
+
+    deadline_date_str: str = format_date(deadline_date)
+
+    return deadline_date_str

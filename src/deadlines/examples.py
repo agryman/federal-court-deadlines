@@ -83,3 +83,15 @@ seasonal_recess_example_3: Example = Example(
     after_event=True,
     deadline_date=datetime.date(2022, 1, 11),
 )
+
+guideline_examples: list[Example] = [
+    general_example_1,
+    general_example_2,
+    general_example_3,
+    holidays_weekends_example_1,
+    holidays_weekends_example_2,
+    summer_recess_example_1,
+    seasonal_recess_example_1,
+    seasonal_recess_example_2,
+    seasonal_recess_example_3,
+]
